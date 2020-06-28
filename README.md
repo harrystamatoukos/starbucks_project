@@ -3,8 +3,8 @@ Project in Data Scientist Nanodegree of Udacity
 
 ## Installation <a name="installation"></a>
 
-Python Anaconda distribution
-Streamlit version 0.62
+Python Anaconda distribution  
+Streamlit version 0.62  
 
 ## Project Motivation<a name="motivation"></a>
 
