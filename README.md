@@ -1,4 +1,4 @@
-<b>File Descriptions<b>
+<b>File Descriptions</b>
 The notebook available here showcases work related to the above questions.
 
 This data set is a simplified version of the real Starbucks app because the underlying simulator only has one product whereas Starbucks actually sells dozens of products.
