@@ -1,0 +1,32 @@
+
+var ftGUID_4228892="4501D3E1D42FCF";
+var ftConfID_4228892="0";
+var ftParams_4228892="ftx=&fty=&ftadz=&ftscw=&ft_custom=&ftOBA=1&ft_ifb=1&ft_domain=www.quora.com&ft_agentEnv=0&ft_referrer=https%3A%2F%2Fwww.quora.com%2FWhat-is-the-meaning-and-story-behind-the-Starbucks-logo&ft_section=__61627652618742192730224171543739608679&cachebuster=76609.10033990808";
+var ftKeyword_4228892="";
+var ftCustom_4228892="";
+var ftSection_4228892="__61627652618742192730224171543739608679";
+var ftSegment_4228892="acfv,w3f,w2b";
+var ftSegmentList_4228892=[{s:'acfv'},{s:'w3f',t:45420000},{s:'w2b'}];
+var ftRuleMatch_4228892="0";
+var ftTimestamp_4228892="1593328737";
+var ftGeoC2_4228892="uk";
+var ftGeoState_4228892="swk";
+var ftGeoCity_4228892="southwark";
+var ftISP_4228892="zen internet ltd";
+var ftSpeed_4228892="xdsl";
+var ftDMA_4228892="826044";
+var ftLong_4228892="-0.05";
+var ftLat_4228892="51.49";
+var ftPostal_4228892="se16 2aa";
+var ftTimeZone_4228892="100";
+var ftMobileCarrier_4228892="";
+var ftImp4228892 = {};
+ftImp4228892.privacy = "x";
+ftImp4228892.guidAge = "61";
+ftImp4228892.impID = "AE282A32-5371-7EA4-FDC4-99DB40EB8439";
+ftImp4228892.duid = "FT:4501D3E1D42FCF";
+
+ftImp4228892.ft_tpplid = "";
+ftImp4228892.ft_c = {};
+
+document.write('<scr'+'ipt src="https://cdn.flashtalking.com/xre/422/4228892/3101631/js/j-4228892-3101631.js" id="ftscript_m4228892" name="ftscript_m4228892"></scr'+'ipt>');
