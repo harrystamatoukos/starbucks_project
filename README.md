@@ -58,4 +58,3 @@ The result of the project is a simple app that recommends offers that maximaze c
 ## Licensing, Authors, Acknowledgements<a name="licensing"></a>
 
 MIT Licence
-
