@@ -36,6 +36,11 @@ df_offer = pd.DataFrame(offers[0])
 df_offer = df_offer[0].str.split(expand=True)
 df_offer.columns = ('Offer Name', 'Reward', 'Difficulty', 'Duration')
 
+df_expense = pd.DataFrame(offers[1])
+
+
 st.write('Most effective offers for the selected demographic')
 
 st.table(df_offer)
+
+st.table(df_expense)
