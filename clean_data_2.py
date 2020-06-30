@@ -8,11 +8,11 @@ def clean_portfolio(portfolio):
     """
     portfolio_clean = portfolio.copy()
     # Create dummy columns for the channels column
-    d_chann = pd.get_dummies(portfolio_clean.channels.apply(pd.Series).stack(),
-                             prefix="channel").sum(level=0)
-    portfolio_clean = pd.concat([portfolio_clean, d_chann], axis=1, sort=False)
+    clean_channels = pd.get_dummies(portfolio_clean.channels.apply(pd.Series).stack(),
+                                    prefix="channel").sum(level=0)
+    portfolio_clean = pd.concat([portfolio_clean, clean_channels], axis=1, sort=False)
     portfolio_clean.drop(columns='channels', inplace=True)
-    # Change column name
+    # Change the column name to be more descriptive
     portfolio_clean.rename(columns={'id': 'offer_id'}, inplace=True)
 
     return portfolio_clean
@@ -22,15 +22,20 @@ def clean_profile(profile):
     """ Clean the profile dataset."""
 
     profile_clean = profile.copy()
+
     # Transform date from int to datetime
     def date(x): return pd.to_datetime(str(x), format='%Y%m%d')
     profile_clean.became_member_on = profile_clean.became_member_on.apply(date)
+
     # Create column that separates customers with valida data
     profile_clean['valid'] = (profile_clean.age != 118).astype(int)
+
     # Change the name of id column to customer_id
     profile_clean.rename(columns={'id': 'customer_id'}, inplace=True)
+
     # Create dummy columns for the gender column
     dummy_gender = pd.get_dummies(profile_clean.gender, prefix="gender")
+
     profile_clean = pd.concat([profile_clean, dummy_gender], axis=1, sort=False)
     return profile_clean
 
@@ -41,20 +46,25 @@ def clean_transcript(transcript):
     transcript_clean = transcript.copy()
     # Split event into several dummy columns
     transcript_clean.event = transcript_clean.event.str.replace(' ', '_')
-    dummy_event = pd.get_dummies(transcript_clean.event, prefix="event")
-    transcript_clean = pd.concat([transcript_clean, dummy_event], axis=1,
+
+    event_dummies = pd.get_dummies(transcript_clean.event, prefix="event")
+    transcript_clean = pd.concat([transcript_clean, event_dummies], axis=1,
                                  sort=False)
     transcript_clean.drop(columns='event', inplace=True)
+
     # Get the offer_id data from the value column
     transcript_clean['offer_id'] = [[*v.values()][0]
                                     if [*v.keys()][0] in ['offer id',
                                                           'offer_id'] else None
                                     for v in transcript_clean.value]
+
     # Get the transaction amount data from the value column
     transcript_clean['amount'] = [np.round([*v.values()][0], decimals=2)
                                   if [*v.keys()][0] == 'amount' else None
                                   for v in transcript_clean.value]
+
     transcript_clean.drop(columns='value', inplace=True)
+
     # Change the name of person column to customer_id
     transcript_clean.rename(columns={'person': 'customer_id'}, inplace=True)
     return transcript_clean
@@ -158,21 +168,23 @@ def round_income(x):
 
 def per_customer_data(df, profile):
     """ Build a dataframe with aggregated purchase and offer data and demographics
-
     """
     cust_dict = dict()
+
     # Get total transaction data
     transactions = df[df.event_transaction == 1].groupby('customer_id')
     cust_dict['total_expense'] = transactions.amount.sum()
     cust_dict['total_transactions'] = transactions.amount.count()
+
     # Get  aggr offer data
     cust_dict.update(get_offer_cust(df))
-    # Get offer type data
-    for ot in ['bogo', 'discount', 'informational']:
-        cust_dict.update(get_offer_cust(df, ot))
+
+    # Get offer type data and updated customer dictionary
+    for offer_type in ['bogo', 'discount', 'informational']:
+        cust_dict.update(get_offer_cust(df, offer_type))
     # Get offer id data
-    for oi in ['Bogo 10 10 7', 'Bogo 10 10 5', 'Bogo 5 5 7', 'Bogo 5 5 5', 'Discount 5 20 10', 'Discount 3 7 7', 'Discount 2 10 10', 'Discount 2 10 7', 'Informational 0 0 4', 'Informational 0 0 3']:
-        cust_dict.update(get_offer_id_cust(df, oi))
+    for offer_id in ['Bogo 10 10 7', 'Bogo 10 10 5', 'Bogo 5 5 7', 'Bogo 5 5 5', 'Discount 5 20 10', 'Discount 3 7 7', 'Discount 2 10 10', 'Discount 2 10 7', 'Informational 0 0 4', 'Informational 0 0 3']:
+        cust_dict.update(get_offer_id_cust(df, offer_id))
 
     customers = pd.concat(cust_dict.values(), axis=1, sort=False)
     customers.columns = cust_dict.keys()
@@ -181,6 +193,8 @@ def per_customer_data(df, profile):
     # Add demographic data
     customers = pd.merge(customers, profile.set_index('customer_id'),
                          left_index=True, right_index=True)
+
+    # create groups of income, age and net expense
     customers['age_group'] = customers.age.apply(round_age)
     customers['income_group'] = customers.income.apply(round_income)
     customers['net_expense'] = customers['total_expense'] - customers['reward']
@@ -193,6 +207,7 @@ def get_offer_stat(customers, stat, offer):
     viewed but not completed the offer, and those that viewed and completed
     the offer
     """
+
     valid = (customers.valid == 1)
     rcv_col = '{}_received'.format(offer)
     vwd_col = '{}_viewed'.format(offer)
@@ -340,7 +355,6 @@ def get_most_popular_offers(customers, n_top=2, q=0.5, offers=None):
 def get_most_popular_offers_filtered(customers, n_top=2, q=0.5, income=None,
                                      age=None, gender=None):
     """ Sort offers based on the ones that result in the highest net_expense
-
     """
     flag = (customers.valid == 1)
     if income:
