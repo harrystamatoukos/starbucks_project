@@ -1,5 +1,4 @@
 import streamlit as st
-import plotly.express as px
 import altair as alt
 from clean_data_2 import *
 import pandas as pd
@@ -39,6 +38,25 @@ df_offer.columns = ('Offer Name', 'Reward', 'Difficulty', 'Duration')
 
 st.write('Most effective offers for the selected demographic')
 
+st.write('To view the most succesful offers for the different demographics select different sliders on the left side of the app')
+
 st.table(df_offer)
 
-st.table(df_expense)
+offers_net_expense = offers[1]
+df_expense = pd.DataFrame.from_records(offers_net_expense, index=[0])
+df_expense = df_expense.melt()
+df_expense.columns = ('Offer', 'Net Expense')
+
+st.write('Net expense chart by offer type')
+
+chart2 = alt.Chart(df_expense).mark_bar(size=40).encode(
+    y='Net Expense',
+    x='Offer',
+).properties(width=700, height=600
+             ).configure_axis(grid=False
+                              ).configure_view(strokeWidth=0
+
+                                               )
+
+
+st.altair_chart(chart2)
